@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /app
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker:18.05.0-ce-git
     steps:
       - checkout
 #      - setup_remote_docker:
@@ -11,14 +11,14 @@ jobs:
       - run:
           name: Build docker image
           command: |
-            docker build -t my_nginx .
+            docker build -t nginx .
       - deploy:
           name: Push docker image to DockerHub
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               DATE_LABEL="$(date '+%Y%m%d%H%M')-$(echo $CIRCLE_SHA1 | cut -c -6)"
               IMAGE_NAME="sampledocker1234/ci_sample:${DATE_LABEL}"
-              docker tag my_nginx ${IMAGE_NAME}
+              docker tag nginx ${IMAGE_NAME}
               docker login -u bubbkis -p 1a2b3c4d5e
               docker push ${IMAGE_NAME}
             fi
